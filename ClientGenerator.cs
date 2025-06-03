@@ -11,21 +11,21 @@ public class SwaggerClientGenerator
     public async Task GenerateClient()
     {
         var httpClient = new HttpClient();
-        var swaggerJson = await httpClient.GetStringAsync("http://localhost:5092/swagger/v1/swagger.json");
+        var swaggerJson = await httpClient.GetStringAsync("http://localhost:5000/swagger/v1/swagger.json");
         var document = await OpenApiDocument.FromJsonAsync(swaggerJson);
 
         var settings = new CSharpClientGeneratorSettings
         {
-            ClassName = "BlogApiClient",
+            ClassName = "InformationApiClient",
             CSharpGeneratorSettings =
             {
-                Namespace = "BlogApi"
+                Namespace = "MyClientNamespace",
             }
         };
 
         var generator = new CSharpClientGenerator(document, settings);
         var code = generator.GenerateFile();
-        await File.WriteAllTextAsync("BlogApiClient.cs", code);
+        await File.WriteAllTextAsync("GeneratedApiClient.cs", code);
     }
 
 }
