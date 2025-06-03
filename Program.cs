@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-// using MyClientNamespace;
+using MyClientNamespace;
 
 public class Program
 {
@@ -23,19 +23,23 @@ public class Program
         app.MapControllers();
 
 
-        // Uncomment the following lines to generate the client code after the application starts
+        // UNCOMMENT the following lines to generate the client code after the application starts
 
-        Task.Run(() => app.RunAsync());
-        Task.Delay(2000);
-        await new SwaggerClientGenerator().GenerateClient();
+        // Task.Run(() => app.RunAsync());
+        // Task.Delay(2000);
+        // await new SwaggerClientGenerator().GenerateClient();
 
-        // Uncomment the following lines to use the generated client    
+        // UNCOMMENT the following lines to use the generated client    
 
-        // var httpClient = new HttpClient();
-        // var client = new CustomApiClient(httpClient);
-        // var user = await client.GetUserAsync(1);
-        // Console.WriteLine($"User ID: {user.Id}, Name: {user.Name}, Email: {user.Email}");
-        // app.Run();
+        var serverTask = Task.Run(() => app.RunAsync());
+        await Task.Delay(2000);
+
+        var httpClient = new HttpClient();
+        var client = new InformationApiClient("http://localhost:5000", httpClient);
+        var user = await client.UserAsync(1);
+        Console.WriteLine($"User ID: {user.Id}, Name: {user.Name}, Email: {user.Email}");
+
+         await serverTask;
     }
 }
 
